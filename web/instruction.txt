@@ -1,0 +1,3 @@
+whenever pushing code into git alway run git pull first before pushing your own changes
+
+the web app frontend goes in this folder
