@@ -12,7 +12,7 @@ const index = () => {
     <View>
       <ScrollView className="w-full h-full mb-0">
       <SafeAreaView>
-        <View className="flex-row justify-between items-center bg-blue-500 px-4 py-3 rounded-xl mx-0 mt-4">
+        <View className="flex-row justify-between items-center bg-blue-500 px-4 py-3 rounded-xl mx-0 mt-1">
       <View className="flex-row items-center">
         <View className="p-3 bg-blue-400 rounded-full">
           <Ionicons name="analytics-outline" size={28} color="#fff" />

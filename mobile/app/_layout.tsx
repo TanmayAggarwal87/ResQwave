@@ -2,24 +2,20 @@ import { Stack, Tabs } from "expo-router";
 import "./global.css";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { TouchableOpacity } from "react-native";
+import { StatusBar, TouchableOpacity } from "react-native";
 
 export default function RootLayout() {
   return (
     <SafeAreaProvider>
+      <StatusBar barStyle={"light-content"}/>
       <Tabs
-        screenOptions={({ route }) => ({
-          animation:"shift",
+        screenOptions={{
           headerShown: false,
+          headerStatusBarHeight:0,
           tabBarActiveTintColor: "#2563eb",
           tabBarInactiveTintColor: "gray",
-          tabBarButton: (props) => (
-            <TouchableOpacity
-              {...props}
-              activeOpacity={0.8} // less than 1 means slight fade, no ripple
-            />
-          ),
-        })}
+          
+        }}
       >
         <Tabs.Screen
           name="index"
@@ -36,6 +32,7 @@ export default function RootLayout() {
           options={{
             title: "Report",
             href: "/Report",
+          
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="alert-circle" size={size} color={color} />
             ),
@@ -60,6 +57,7 @@ export default function RootLayout() {
           }}
         />
         <Tabs.Screen name="(auth)" options={{ href: null }} />
+        <Tabs.Screen name="Camera" options={{ href: null }} />
       </Tabs>
     </SafeAreaProvider>
   );

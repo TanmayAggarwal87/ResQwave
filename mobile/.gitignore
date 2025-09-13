@@ -2,13 +2,14 @@
 
 # dependencies
 node_modules/
+.vscode
+.cursor
 
 # Expo
 .expo/
 dist/
 web-build/
 expo-env.d.ts
-.vscode
 
 # Native
 .kotlin/
@@ -38,3 +39,7 @@ yarn-error.*
 *.tsbuildinfo
 
 app-example
+
+# generated native folders
+/ios
+/android
