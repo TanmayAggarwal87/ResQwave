@@ -134,7 +134,7 @@ const Report = () => {
           <TouchableOpacity
             onPress={() => setSpeak(!speak)}
             className={cn(
-              "px-4 py-1 border border-black w-auto max-w-[130px] text-center rounded-xl mb-2 opacity-100",
+              "px-4 py-1 border border-black w-auto max-w-[160px] text-center rounded-xl mb-2 ",
               speak ? "bg-red-200" : "bg-white"
             )}
           >
