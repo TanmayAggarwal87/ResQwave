@@ -1,46 +1,26 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, ScrollView, Pressable } from "react-native";
+import { View, Text, ScrollView, Pressable } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { SafeAreaView } from "react-native-safe-area-context";
-
-const safetyTips:any = {
-  "Oil Spill": [
-    "Avoid contact with the water or shoreline.",
-    "Keep pets and children away from contaminated areas.",
-    "Report any wildlife covered in oil to local authorities.",
-    "Use protective gloves if you must handle anything from the water."
-  ],
-  "Dead Fish/Red Tide": [
-    "Do not swim or fish in affected areas.",
-    "Avoid collecting or eating dead fish or shellfish.",
-    "Wear a mask if the smell is too strong — it can irritate your lungs.",
-    "Report sightings to the local environmental department."
-  ],
-  "Stranded Animal": [
-    "Do not touch or push the animal back into the water.",
-    "Keep a safe distance and keep crowds away.",
-    "Call local rescue services or wildlife authorities.",
-    "Take photos from a distance to report accurately."
-  ],
-  "Storm Surge": [
-    "Move to higher ground immediately.",
-    "Avoid driving or walking through flooded areas.",
-    "Stay updated through official weather alerts.",
-    "Have an emergency kit with essentials ready."
-  ],
-  "Illegal Fishing": [
-    "Do not confront the fishermen directly.",
-    "Take photos or videos safely from a distance.",
-    "Note the location and time for reporting.",
-    "Inform the coast guard or local fisheries department."
-  ]
-};
+import { useTranslation } from "react-i18next";
+import { useLanguageStore } from "@/store/useLanguageStore";
 
 const SafetyTips = () => {
   const [expanded, setExpanded] = useState<string | null>(null);
+  const { t } = useTranslation();
+  const { language } = useLanguageStore();
 
   const toggleExpand = (key: string) => {
     setExpanded(expanded === key ? null : key);
+  };
+
+  // ✅ Translate titles & tips dynamically
+  const safetyTips:any = {
+    "oil_spill": t("oil_spill_tips", { returnObjects: true }),
+    "dead_fish": t("dead_fish_tips", { returnObjects: true }),
+    "stranded_animal": t("stranded_animal_tips", { returnObjects: true }),
+    "storm_surge": t("storm_surge_tips", { returnObjects: true }),
+    "illegal_fishing": t("illegal_fishing_tips", { returnObjects: true }),
   };
 
   return (
@@ -48,7 +28,7 @@ const SafetyTips = () => {
       {/* Header */}
       <View className="bg-blue-500 p-4">
         <Text className="text-white text-2xl font-bold text-center">
-          Safety Tips
+          {t("safety_tips")}
         </Text>
       </View>
 
@@ -60,10 +40,12 @@ const SafetyTips = () => {
           >
             {/* Accordion Header */}
             <Pressable
-              className="flex-row  justify-between items-center bg-blue-100 p-4"
+              className="flex-row justify-between items-center bg-blue-100 p-4"
               onPress={() => toggleExpand(key)}
             >
-              <Text className="text-xl font-semibold text-blue-900">{key}</Text>
+              <Text className="text-xl font-semibold text-blue-900">
+                {t(`${key}_title`)} {/* ✅ Translate title */}
+              </Text>
               <Ionicons
                 name={expanded === key ? "chevron-up" : "chevron-down"}
                 size={20}
@@ -74,7 +56,7 @@ const SafetyTips = () => {
             {/* Accordion Content */}
             {expanded === key && (
               <View className="bg-white px-4 py-3">
-                {safetyTips[key].map((tip:any, idx:any) => (
+                {safetyTips[key].map((tip: string, idx: number) => (
                   <Text key={idx} className="text-lg text-gray-700 mb-2">
                     • {tip}
                   </Text>

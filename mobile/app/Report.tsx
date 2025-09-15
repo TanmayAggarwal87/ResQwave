@@ -10,6 +10,8 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import cn from "clsx";
 import { Link } from "expo-router";
+import { useTranslation } from "react-i18next";
+import { useLanguageStore } from "@/store/useLanguageStore";
 
 const Report = () => {
   const [step, setStep] = useState(1);
@@ -19,6 +21,7 @@ const Report = () => {
     photo: null,
   });
   const [speak, setSpeak] = useState(false);
+  const { t } = useTranslation();
 
   const handleNext = () => {
     setStep((prev) => prev + 1);
@@ -32,12 +35,12 @@ const Report = () => {
     <SafeAreaView className="flex-1 bg-white p-4 gap-4">
       <View className="bg-red-600 flex justify-between px-2 w-full rounded-xl py-4 items-center flex-row mb-5">
         <Ionicons name="call-outline" size={25} color={"#ffffff"} />
-        <View className="flex justify-center items-center flex-col">
-          <Text className="text-white font-bold text-xl">
-            Life Threatening Emergency?
+        <View className="flex justify-start items-center flex-col">
+          <Text className="text-white font-bold text-lg">
+            {t("life_threatening_emergency")}
           </Text>
           <Text className="text-gray-200 mt-1 font-semibold text-md">
-            Call Emergency Services Immediately
+            {t("call_emergency_services")}
           </Text>
         </View>
         <TouchableOpacity className="bg-white px-2 py-1 rounded-xl">
@@ -65,12 +68,12 @@ const Report = () => {
             What type of hazard are you reporting?
           </Text>
           {[
-            "Oil Spill",
-            "Dead Fish/Red Tide",
-            "Stranded Animal",
-            "Storm Surge",
-            "Illegal Fishing",
-            "Other Hazard",
+            t("oil_spill_title"),
+             t("storm_surge_title"),
+             t("dead_fish_title"),
+             t("stranded_animal_title"),
+             t("illegal_fishing_title"),
+             t("other_hazard_title"),
           ].map((type) => (
             <TouchableOpacity
               key={type}
@@ -90,7 +93,7 @@ const Report = () => {
               formData.hazardType ? "bg-blue-500" : "bg-gray-300"
             }`}
           >
-            <Text className="text-white text-center text-lg">Continue</Text>
+            <Text className="text-white text-center text-lg">{t("continue")}</Text>
           </TouchableOpacity>
         </View>
       )}
@@ -98,9 +101,9 @@ const Report = () => {
       {/* STEP 2 */}
       {step === 2 && (
         <View>
-          <Text className="text-xl font-bold mb-2">Provide Details</Text>
+          <Text className="text-xl font-bold mb-2">{t("Provide Details")}</Text>
           <Text className="text-md font-light mb-4 text-gray-600">
-            Help authorities understand the threat better
+            {t("help_authorities")}
           </Text>
 
           {/* Location Card */}
@@ -108,9 +111,9 @@ const Report = () => {
             <View className="flex-row gap-4 items-center">
               <Ionicons name="location-outline" size={28} />
               <View>
-                <Text className="text-xl font-bold">Current Location</Text>
+                <Text className="text-xl font-bold">{t("current_location")}</Text>
                 <Text className="text-md text-gray-700 font-light">
-                  Getting Location...
+                  {t("getting_location")}
                 </Text>
               </View>
             </View>
@@ -121,7 +124,7 @@ const Report = () => {
 
           {/* Description */}
           <TextInput
-            placeholder="Describe what you see..."
+            placeholder={t("describe_what_you_see")}
             multiline
             value={formData.description}
             onChangeText={(text) =>
@@ -143,17 +146,17 @@ const Report = () => {
                 name={speak ? "mic-off-outline" : "mic-outline"}
                 size={18}
               />
-              <Text>{speak ? "Stop Recording" : "Start Recording"}</Text>
+              <Text>{speak ? t("stop_recording" ): t("start_recording")}</Text>
             </View>
           </TouchableOpacity>
 
           {/* Photo / Video Buttons */}
-          <Text className="text-xl font-bold mt-2">Add Photo or Video</Text>
+          <Text className="text-xl font-bold mt-2">Add Photo</Text>
           <View className="flex-row gap-4 mt-6 mx-4 mb-4 justify-center">
             <Link href="/Camera" asChild>
               <TouchableOpacity className="px-10 py-6 border border-black rounded-xl items-center">
                 <Ionicons name="camera-outline" size={26} />
-                <Text>Take Photo</Text>
+                <Text>{t("take_photo")}</Text>
               </TouchableOpacity>
             </Link>
 
@@ -167,14 +170,14 @@ const Report = () => {
             className="bg-blue-500 p-3 rounded-2xl"
             onPress={handleNext}
           >
-            <Text className="text-white text-center text-lg">Continue</Text>
+            <Text className="text-white text-center text-lg">{t("continue")}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             className="p-3 mt-3 rounded-2xl bg-gray-300"
             onPress={handleBack}
           >
-            <Text className="text-center text-lg">Back</Text>
+            <Text className="text-center text-lg">{t("back")}</Text>
           </TouchableOpacity>
         </View>
       )}
@@ -182,7 +185,7 @@ const Report = () => {
       {/* STEP 3 */}
       {step === 3 && (
         <View>
-          <Text className="text-3xl font-bold mb-4">Review & Submit</Text>
+          <Text className="text-3xl font-bold mb-4">{t("review_and_submit")}</Text>
           <Image
             source={{
               uri: "https://placehold.co/600x400/png",
@@ -191,11 +194,11 @@ const Report = () => {
           />
 
           <View className="flex-row mb-2">
-            <Text className="text-xl font-bold">Hazard Type:</Text>
+            <Text className="text-xl font-bold">{t("hazard_type")}:</Text>
             <Text className="text-xl"> {formData.hazardType}</Text>
           </View>
           <View className="flex-row">
-            <Text className="text-xl font-bold">Description:</Text>
+            <Text className="text-xl font-bold">{t("description")}:</Text>
             <Text className="text-xl"> {formData.description}</Text>
           </View>
 
@@ -203,14 +206,14 @@ const Report = () => {
             className="bg-green-500 p-3 rounded-2xl mt-6"
             onPress={() => setStep(4)}
           >
-            <Text className="text-white text-center text-lg">Submit</Text>
+            <Text className="text-white text-center text-lg">{t("submit")}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             className="p-3 mt-3 rounded-2xl bg-gray-300"
             onPress={handleBack}
           >
-            <Text className="text-center text-lg">Back</Text>
+            <Text className="text-center text-lg">{t("back")}</Text>
           </TouchableOpacity>
         </View>
       )}
@@ -220,7 +223,7 @@ const Report = () => {
           <View className="p-6 bg-green-200 rounded-full"><Ionicons name="send" size={80} color="green" /></View>
           
           <Text className="text-2xl font-bold mt-4 text-green-700">
-            Report Submitted!
+            {t("report_submitted")}
           </Text>
           <Text className="text-md text-gray-600 text-center mt-2 mb-6">
             Your report has been sent to authorities for verification.
@@ -232,12 +235,12 @@ const Report = () => {
             onPress={() => setStep(1)}
           >
             <Text className="text-white text-center text-lg">
-              Report Another Hazard
+              {t("report_another_hazard")}
             </Text>
           </TouchableOpacity>
 
           <TouchableOpacity className="bg-gray-200 p-3 rounded-2xl w-60">
-            <Text className="text-center text-lg">Track This Report</Text>
+            <Text className="text-center text-lg">{t("track_this_report")}</Text>
           </TouchableOpacity>
         </View>
       )}

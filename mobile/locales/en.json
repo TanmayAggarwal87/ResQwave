@@ -1,0 +1,90 @@
+{
+  "app_name": "RescueWave",
+  "app_tagline": "Marine Safety Alert System",
+  "urgent_alerts": "⚠️ Urgent Alerts",
+  "recent_activities": "Recent Activities",
+  "critical": "Critical",
+  "medium": "Medium",
+  "location": "Location",
+  "time_ago": "{{time}} ago",
+  "oil_spill": "Oil Spill",
+  "storm_surge": "Storm Surge",
+  "dead_fish": "Dead Fish/Red Tide",
+  "stranded_animal": "Stranded Animal",
+  "illegal_fishing": "Illegal Fishing",
+  "safety_tips": "Safety Tips",
+  "profile": "Profile",
+  "total_reports": "Total Reports",
+  "verified": "Verified",
+  "accuracy": "Accuracy",
+  "points": "Points",
+  "achievements": "Achievements",
+  "first_reporter": "First Reporter",
+  "first_reporter_desc": "Reported 5 hazards for the first time",
+  "ocean_guardian": "Ocean Guardian",
+  "ocean_guardian_desc": "10 verified reports",
+  "storm_tracker": "Storm Tracker",
+  "storm_tracker_desc": "Reported 3 storm surges",
+
+  "oil_spill_title": "Oil Spill",
+  "oil_spill_tips": [
+    "Avoid contact with the water or shoreline.",
+    "Keep pets and children away from contaminated areas.",
+    "Report any wildlife covered in oil to local authorities.",
+    "Use protective gloves if you must handle anything from the water."
+  ],
+
+  "dead_fish_title": "Dead Fish/Red Tide",
+  "dead_fish_tips": [
+    "Do not swim or fish in affected areas.",
+    "Avoid collecting or eating dead fish or shellfish.",
+    "Wear a mask if the smell is too strong — it can irritate your lungs.",
+    "Report sightings to the local environmental department."
+  ],
+
+  "stranded_animal_title": "Stranded Animal",
+  "stranded_animal_tips": [
+    "Do not touch or push the animal back into the water.",
+    "Keep a safe distance and keep crowds away.",
+    "Call local rescue services or wildlife authorities.",
+    "Take photos from a distance to report accurately."
+  ],
+
+  "storm_surge_title": "Storm Surge",
+  "storm_surge_tips": [
+    "Move to higher ground immediately.",
+    "Avoid driving or walking through flooded areas.",
+    "Stay updated through official weather alerts.",
+    "Have an emergency kit with essentials ready."
+  ],
+
+  "illegal_fishing_title": "Illegal Fishing",
+  "illegal_fishing_tips": [
+    "Do not confront the fishermen directly.",
+    "Take photos or videos safely from a distance.",
+    "Note the location and time for reporting.",
+    "Inform the coast guard or local fisheries department."
+  ],
+
+  "life_threatening_emergency": "Life Threatening Emergency?",
+  "call_emergency_services": "Call Emergency Services Immediately",
+  "reporting_hazard_prompt": "What type of hazard are you reporting?",
+  "other_hazard": "other hazard?",
+  "provide_details": "Provide details",
+  "help_authorities": "help authorities understand threat better",
+  "current_location": "current location",
+  "getting_location": "getting location",
+  "describe_what_you_see": "describe what you see",
+  "start_recording": "start recording",
+  "stop_recording": "stop recording",
+  "take_photo": "take photo",
+  "continue": "continue",
+  "back": "back",
+  "hazard_type": "Hazard type",
+  "description": "description",
+  "review_and_submit": "review and submit",
+  "submit": "submit",
+  "report_submitted": "Report submitted",
+  "report_another_hazard": "report another hazard",
+  "track_this_report": "track this report"
+}

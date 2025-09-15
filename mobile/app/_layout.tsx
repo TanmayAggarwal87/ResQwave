@@ -1,3 +1,5 @@
+import "../i18n";
+
 import { Stack, Tabs } from "expo-router";
 import "./global.css";
 import { SafeAreaProvider } from "react-native-safe-area-context";
