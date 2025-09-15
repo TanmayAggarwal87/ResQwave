@@ -1,19 +1,22 @@
 import i18n from "../i18n";
-import { View, Text, ScrollView, Image, TouchableOpacity, Modal, Pressable } from "react-native";
-import React, { useState } from "react";
+import { View, Text, ScrollView, Image, TouchableOpacity, Modal, Pressable, ActivityIndicator } from "react-native";
+import React, { useState, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Link } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { useLanguageStore } from "../store/useLanguageStore";
-import cn from "clsx"
-
+import cn from "clsx";
+import axios from "axios";
+import { axiosInstance } from "@/libs/axios";
 
 const Index = () => {
   const { t } = useTranslation();
-  const { language, setLanguage } = useLanguageStore(); // ✅ get from store
+  const { language, setLanguage } = useLanguageStore();
 
   const [modalVisible, setModalVisible] = useState(false);
+  const [reports, setReports] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const availableLanguages = [
     { code: "en", label: "English" },
@@ -29,6 +32,21 @@ const Index = () => {
     setModalVisible(false);
   };
 
+  useEffect(() => {
+    const fetchReports = async () => {
+      try {
+        const res = await axiosInstance.get("/reports/get");
+        setReports(res.data);
+      } catch (error) {
+        console.error("Failed to fetch reports:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchReports();
+  }, []);
+
   return (
     <View>
       <ScrollView className="w-full h-full mb-0">
@@ -39,21 +57,19 @@ const Index = () => {
               <View className="p-3 bg-blue-400 rounded-full">
                 <Ionicons name="analytics-outline" size={28} color="#fff" />
               </View>
-
               <View className="ml-3">
                 <Text className="text-white font-bold text-lg">ResQwave</Text>
                 <Text className="text-blue-100 text-xs">{t("app_subtitle")}</Text>
               </View>
             </View>
 
-            {/* ---------- LANGUAGE SELECTOR BUTTON ---------- */}
             <TouchableOpacity
               className="bg-white px-4 py-2 rounded-full"
               onPress={() => setModalVisible(true)}
             >
               <Text className={cn("text-blue-600 font-semibold text-sm")}>
-          {availableLanguages.find((l) => l.code === language)?.label || "EN"}
-        </Text>
+                {availableLanguages.find((l) => l.code === language)?.label || "EN"}
+              </Text>
             </TouchableOpacity>
           </View>
 
@@ -89,42 +105,41 @@ const Index = () => {
             </Pressable>
           </Modal>
 
-          {/* ---------- REST OF YOUR CONTENT ---------- */}
-          <View className="bg-red-50 rounded-2xl p-4 mx-4 mt-4 shadow">
-            <Text className="text-red-600 font-bold mb-2 text-sm">⚠️ {t("urgent_alerts")}</Text>
-            <View className="bg-white rounded-2xl p-4">
-              <View className="flex-row justify-between items-center mb-1">
-                <View className="flex-row items-center">
-                  <Ionicons name="alert-circle" size={22} color="#dc2626" />
-                  <Text className="ml-2 font-bold text-lg">{t("oil_spill_title")}</Text>
+          {/* ---------- REPORTS FEED ---------- */}
+          <View className="mx-4 mt-4">
+            <Text className="text-2xl font-bold mb-3">{t("recent_activities")}</Text>
+
+            {loading ? (
+              <ActivityIndicator size="large" color="#3b82f6" />
+            ) : reports.length === 0 ? (
+              <Text className="text-gray-500 text-center">{t("no_reports_found")}</Text>
+            ) : (
+              reports.map((report) => (
+                <View
+                  key={report._id}
+                  className="bg-white rounded-2xl p-4 mb-4 shadow"
+                >
+                  <View className="flex-row justify-between items-center mb-1">
+                    <View className="flex-row items-center">
+                      <Ionicons name="alert-circle" size={22} color="#dc2626" />
+                      <Text className="ml-2 font-bold text-lg">{report.hazardType}</Text>
+                    </View>
+                    <Text className="bg-red-500 text-white px-2 py-1 text-xs rounded-md">
+                      {t("critical")}
+                    </Text>
+                  </View>
+
+                  <Text className="text-gray-700 mb-3">{report.description}</Text>
+
+                  {report.photo && (
+                    <Image
+                      source={{ uri: report.photo }}
+                      className="w-full h-36 rounded-xl"
+                    />
+                  )}
                 </View>
-                <Text className="bg-red-500 text-white px-2 py-1 text-xs rounded-md">
-                  {t("critical")}
-                </Text>
-              </View>
-
-              <View className="flex-row items-center mb-2">
-                <Ionicons name="location" size={16} color="gray" />
-                <Text className="ml-1 text-gray-600 text-sm">Goa Coast, Panjim Beach</Text>
-
-                <Ionicons name="time" size={16} color="gray" className="ml-4" />
-                <Text className="ml-1 text-gray-600 text-sm">2 {t("hours_ago")}</Text>
-              </View>
-              <Text className="text-gray-700 mb-3">{t("oil_spill_desc")}</Text>
-
-              <Image
-                source={{
-                  uri: "https://placehold.co/600x400/png",
-                }}
-                className="w-full h-36 rounded-xl"
-              />
-            </View>
-          </View>
-
-          {/* ---------- Recent Activities ---------- */}
-          <View className="mx-3">
-            <Text className="mt-4 text-2xl font-bold">{t("recent_activities")}</Text>
-
+              ))
+            )}
           </View>
         </SafeAreaView>
       </ScrollView>

@@ -47,4 +47,14 @@ router.post("/add", upload.single("photo"), async (req, res) => {
   }
 });
 
+
+router.get("/get", async (req, res) => {
+  try {
+    const reports = await Hazard.find({ isApproved: true }).sort({ createdAt: -1 });
+    res.status(200).json(reports);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch reports" });
+  }
+})
+
 export default router;
