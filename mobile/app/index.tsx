@@ -122,14 +122,14 @@ const Index = () => {
                   <View className="flex-row justify-between items-center mb-1">
                     <View className="flex-row items-center">
                       <Ionicons name="alert-circle" size={22} color="#dc2626" />
-                      <Text className="ml-2 font-bold text-lg">{report.hazardType}</Text>
+                      <Text className="ml-2 font-bold text-lg">{t(`${report.hazardType}`)}</Text>
                     </View>
                     <Text className="bg-red-500 text-white px-2 py-1 text-xs rounded-md">
                       {t("critical")}
                     </Text>
                   </View>
 
-                  <Text className="text-gray-700 mb-3">{report.description}</Text>
+                  <Text className="text-gray-700 mb-3">{t(report.description)}</Text>
 
                   {report.photo && (
                     <Image
