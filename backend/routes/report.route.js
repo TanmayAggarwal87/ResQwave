@@ -1,34 +1,50 @@
 import express from "express";
-import { Hazard } from "../models/hazard.js";
+import cloudinary from "../config/cloudinary.js";
+import upload from "../middlewares/multer.js";
+import {Hazard} from "../models/hazard.js"; // your mongoose model
 
-export const router = express.Router();
+const router = express.Router();
 
-// Add a new hazard
-router.post("/add", async (req, res) => {
+router.post("/add", upload.single("photo"), async (req, res) => {
   try {
-    const { hazardType, description, photo, hazardStage } = req.body;
+    console.log("Req.body:", req.body);
+    console.log("Req.file:", req.file);
+    if (req.file) {
+      const result = await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: "reports" },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result);
+          }
+        );
+        stream.end(req.file.buffer);
+      });
 
-    const newHazard = new Hazard({
-      hazardType,
-      description,
-      photo,
-      hazardStage
-    });
+      const newReport = new Hazard({
+        hazardType: req.body.hazardType,
+        description: req.body.description,
+        photo: result.secure_url,
+        hazardStage: req.body.hazardStage || "critical",
+      });
 
-    await newHazard.save();
-    res.status(201).json({ message: "Hazard added", hazard: newHazard });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Something went wrong" });
+      const savedReport = await newReport.save();
+      return res.json(savedReport);
+    } else {
+      const newReport = new Hazard({
+        hazardType: req.body.hazardType,
+        description: req.body.description,
+        photo: null,
+        hazardStage: req.body.hazardStage || "critical",
+      });
+
+      const savedReport = await newReport.save();
+      return res.json(savedReport);
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
-
-router.get("/", async (req, res) => {
-  try {
-    const hazards = await Hazard.find();
-    res.json(hazards);
-  } catch (error) {
-    res.status(500).json({ error: "Something went wrong" });
-  }
-});
+export default router;

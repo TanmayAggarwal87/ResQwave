@@ -10,8 +10,7 @@ const hazardSchema = new mongoose.Schema({
     required: true
   },
   photo: {
-    type: String, // store base64 URL
-    required: true
+    type: String,
   },
   isApproved: {
     type: Boolean,

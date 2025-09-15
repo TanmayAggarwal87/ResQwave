@@ -2,14 +2,18 @@ import CameraPreview from '@/components/CameraPreview';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
 import { Link } from 'expo-router';
-import { useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useRouter } from 'expo-router';
+import { useReportStore } from "@/store/useReportStore";
 
 export default function Camera() {
   const [facing, setFacing] = useState<CameraType>('back');
   const [permission, requestPermission] = useCameraPermissions();
   const [photo, setPhoto] = useState<any>(null);
   const cameraRef = useRef<CameraView | null>(null);
+  const router = useRouter()
+  const set1Photo = useReportStore((state) => state.setPhoto);
 
   if (!permission) return <View />;
 
@@ -30,18 +34,24 @@ export default function Camera() {
     setFacing((current) => (current === 'back' ? 'front' : 'back'));
   }
 
-  const handleTakePhoto =  async () => {
-    if (cameraRef.current) {
-        const options = {
-            quality: 1,
-            base64: true,
-            exif: false,
-        };
-        const takedPhoto = await cameraRef.current.takePictureAsync(options);
+  
+  const handleTakePhoto = useCallback(async () => {
+    if (!cameraRef.current) return;
 
-        setPhoto(takedPhoto);
+    try {
+      const capturedPhoto = await cameraRef.current.takePictureAsync({
+        base64: true, // include base64
+        quality: 0.7, // reduce size a bit
+      });
+
+      setPhoto(capturedPhoto);
+    } catch (error) {
+      console.log("Error taking picture:", error);
     }
-  }; 
+  }, []);
+
+  
+
 
   const handleRetakePhoto = () => setPhoto(null);
 

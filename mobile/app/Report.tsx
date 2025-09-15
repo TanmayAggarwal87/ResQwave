@@ -1,17 +1,21 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
   TouchableOpacity,
   TextInput,
   Image,
+  Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import cn from "clsx";
 import { Link } from "expo-router";
 import { useTranslation } from "react-i18next";
-import { useLanguageStore } from "@/store/useLanguageStore";
+import { axiosInstance } from "@/libs/axios";
+import { useReportStore } from "@/store/useReportStore";
+
+
 
 const Report = () => {
   const [step, setStep] = useState(1);
@@ -20,6 +24,7 @@ const Report = () => {
     description: "",
     photo: null,
   });
+  const photo = useReportStore((state) => state.photo);
   const [speak, setSpeak] = useState(false);
   const { t } = useTranslation();
 
@@ -30,6 +35,45 @@ const Report = () => {
   const handleBack = () => {
     if (step > 1) setStep(step - 1);
   };
+
+  const handleSubmit = async () => {
+  if (!formData.hazardType || !formData.description || !photo) {
+    Alert.alert("All fields required!");
+    return;
+  }
+
+  try {
+    const formDataObj = new FormData();
+    formDataObj.append("hazardType", formData.hazardType);
+    formDataObj.append("description", formData.description);
+    formDataObj.append("hazardStage", "critical");
+
+    // If your `photo` from Zustand is already a Cloudinary URL (because you upload from CameraPreview)
+    // then just append as text:
+    if (photo.startsWith("http")) {
+      formDataObj.append("photoUrl", photo);
+    } else {
+      // If it's a local base64 string and you want backend to upload to Cloudinary
+      formDataObj.append("photo", {
+        uri: photo, // Make sure it's a file:// URI, not base64
+        name: "hazard.jpg",
+        type: "image/jpeg",
+      });
+    }
+
+    await axiosInstance.post("/reports/add", formDataObj, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    setStep(4);
+    useReportStore.getState().reset();
+  } catch (err) {
+    console.log( err);
+    Alert.alert("Failed to submit report");
+  }
+};
+
+
 
   return (
     <SafeAreaView className="flex-1 bg-white p-4 gap-4">
@@ -188,7 +232,7 @@ const Report = () => {
           <Text className="text-3xl font-bold mb-4">{t("review_and_submit")}</Text>
           <Image
             source={{
-              uri: "https://placehold.co/600x400/png",
+              uri: `${photo}`,
             }}
             className="w-full h-44 rounded-xl mb-4"
           />
@@ -204,7 +248,7 @@ const Report = () => {
 
           <TouchableOpacity
             className="bg-green-500 p-3 rounded-2xl mt-6"
-            onPress={() => setStep(4)}
+            onPress={handleSubmit}
           >
             <Text className="text-white text-center text-lg">{t("submit")}</Text>
           </TouchableOpacity>
