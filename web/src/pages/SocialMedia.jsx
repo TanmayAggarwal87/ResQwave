@@ -4,8 +4,6 @@ import {
   Search, 
   Filter, 
   Twitter, 
-  Facebook, 
-  Instagram, 
   Youtube,
   MapPin,
   Calendar,
@@ -38,19 +36,19 @@ const SocialMedia = () => {
   const [trendingFilter, setTrendingFilter] = useState(false);
   const [sentimentFilter, setSentimentFilter] = useState('All');
 
-  // Sample social media posts data with India-oriented content
+  // Sample social media posts data with India tsunami-oriented content
   const socialPosts = [
     {
       id: 1,
       platform: 'Twitter',
       username: '@IndiaMetDepartment',
       handle: 'indiametdept',
-      content: 'High wave alert for coastal Tamil Nadu and Andhra Pradesh. Fishermen advised not to venture into sea for next 24 hours. #CycloneAlert #IndiaCoastalSafety',
-      time: '45 mins ago',
+      content: 'Tsunami alert issued for coastal Tamil Nadu and Andhra Pradesh. Evacuation procedures activated. #TsunamiAlert #IndiaCoastalSafety',
+      time: '15 mins ago',
       location: 'Chennai, Tamil Nadu',
-      likes: 214,
-      shares: 87,
-      comments: 32,
+      likes: 512,
+      shares: 243,
+      comments: 87,
       trending: true,
       verified: true,
       sentiment: 'critical',
@@ -59,15 +57,15 @@ const SocialMedia = () => {
     },
     {
       id: 2,
-      platform: 'Facebook',
+      platform: 'Telegram',
       username: 'Indian National Centre for Ocean Information Services',
       handle: 'incoishyd',
-      content: 'Tsunami watch issued for Andaman and Nicobar Islands after 7.6 magnitude earthquake in Eastern Indian Ocean. Stay tuned for updates.',
-      time: '2 hours ago',
+      content: 'URGENT: Tsunami warning issued for Andaman and Nicobar Islands after 8.2 magnitude earthquake in Eastern Indian Ocean. Waves expected within 45 minutes.',
+      time: '25 mins ago',
       location: 'Andaman and Nicobar Islands',
-      likes: 543,
-      shares: 321,
-      comments: 128,
+      likes: 876,
+      shares: 543,
+      comments: 210,
       trending: true,
       verified: true,
       sentiment: 'critical',
@@ -76,147 +74,157 @@ const SocialMedia = () => {
     },
     {
       id: 3,
-      platform: 'Instagram',
-      username: 'Indian Coast Guard',
-      handle: 'indiancoastguard',
-      content: 'Rescue operations underway off Mumbai coast after merchant vessel reports distress. All crew safe. #SafetyAtSea #IndianCoastGuard',
-      time: '5 hours ago',
-      location: 'Mumbai, Maharashtra',
-      likes: 876,
-      shares: 234,
-      comments: 76,
+      platform: 'Reddit',
+      username: 'u/CoastalWatch_India',
+      handle: 'coastalwatch',
+      content: 'Multiple reports of unusual marine activity near Visakhapatnam coast. Water receding rapidly from beaches. Possible tsunami indicator.',
+      time: '35 mins ago',
+      location: 'Visakhapatnam, Andhra Pradesh',
+      likes: 324,
+      shares: 187,
+      comments: 96,
       trending: true,
-      verified: true,
-      sentiment: 'warning',
-      priority: 'medium',
-      image: 'https://images.unsplash.com/photo-1501426026826-31c667bdf23d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+      verified: false,
+      sentiment: 'alert',
+      priority: 'high',
+      image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
     },
     {
       id: 4,
       platform: 'Twitter',
       username: '@NDRFIndia',
       handle: 'ndrf',
-      content: 'NDRF teams deployed to coastal Kerala in anticipation of heavy rainfall and potential flooding. Citizens advised to follow official channels for updates.',
-      time: '8 hours ago',
+      content: 'NDRF teams deployed to coastal Kerala for tsunami preparedness. Citizens in low-lying areas advised to move to higher ground immediately.',
+      time: '45 mins ago',
       location: 'Kerala Coast',
-      likes: 432,
-      shares: 198,
-      comments: 65,
+      likes: 678,
+      shares: 321,
+      comments: 143,
       trending: true,
       verified: true,
-      sentiment: 'alert',
-      priority: 'medium',
+      sentiment: 'critical',
+      priority: 'high',
       image: 'https://images.unsplash.com/photo-1473580044384-7baa7a6ab2b6?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
     },
     {
       id: 5,
-      platform: 'Facebook',
-      username: 'India Meteorological Department',
-      handle: 'imd',
-      content: 'Cyclone alert for Odisha and West Bengal coasts. Expected landfall in 48 hours. Fishermen advised to return to shore immediately.',
-      time: '1 day ago',
-      location: 'Bay of Bengal',
-      likes: 765,
-      shares: 342,
-      comments: 143,
-      trending: false,
+      platform: 'Youtube',
+      username: 'DD News Coastal Division',
+      handle: 'ddnewscoastal',
+      content: 'LIVE: Tsunami warning for eastern Indian coastline. Officials coordinating evacuation efforts in Tamil Nadu, Andhra Pradesh, and Odisha.',
+      time: '1 hour ago',
+      location: 'Eastern Indian Coast',
+      likes: 1543,
+      shares: 765,
+      comments: 432,
+      trending: true,
       verified: true,
+      sentiment: 'warning',
+      priority: 'high',
+      image: 'https://images.unsplash.com/photo-1506953823976-52e1fdc0149a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+    },
+    {
+      id: 6,
+      platform: 'Telegram',
+      username: 'Indian Maritime Alert',
+      handle: 'maritimealert',
+      content: 'URGENT: All ships advised to move to deeper waters immediately. Tsunami expected to hit Indian coastline within the hour.',
+      time: '1 hour ago',
+      location: 'Bay of Bengal',
+      likes: 432,
+      shares: 287,
+      comments: 154,
+      trending: true,
+      verified: true,
+      sentiment: 'critical',
+      priority: 'high',
+      image: 'https://images.unsplash.com/photo-1615783080245-5d87bb8af5d2?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+    },
+    {
+      id: 7,
+      platform: 'Reddit',
+      username: 'u/IndianWeatherWatch',
+      handle: 'indianweatherwatch',
+      content: 'Official tsunami warning extended to West Bengal coastline. People in coastal districts should evacuate immediately.',
+      time: '2 hours ago',
+      location: 'West Bengal Coast',
+      likes: 287,
+      shares: 154,
+      comments: 87,
+      trending: true,
+      verified: false,
       sentiment: 'warning',
       priority: 'high',
       image: 'https://images.unsplash.com/photo-1505118380757-91f5f5632de0?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
     },
     {
-      id: 6,
-      platform: 'Instagram',
-      username: 'Local Fisherman Association',
-      handle: 'chennaifishermen',
-      content: 'Unusual tidal patterns observed off Chennai coast. Higher than normal waves reported. Advising all small boats to stay ashore today.',
-      time: '1 day ago',
-      location: 'Chennai, Tamil Nadu',
-      likes: 143,
-      shares: 45,
-      comments: 32,
-      trending: false,
-      verified: false,
-      sentiment: 'info',
-      priority: 'low',
-      image: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
-    },
-    {
-      id: 7,
+      id: 8,
       platform: 'Twitter',
       username: '@GoaTourism',
       handle: 'goatourism',
-      content: 'Beach safety alert: Strong undertow reported at popular beaches in North Goa. Swim only in designated areas with lifeguards present.',
-      time: '2 days ago',
+      content: 'Tsunami watch for Goa coastline. Beaches closed until further notice. Tourists advised to move to designated safe zones.',
+      time: '2 hours ago',
       location: 'Goa',
-      likes: 287,
-      shares: 124,
-      comments: 43,
-      trending: false,
+      likes: 432,
+      shares: 198,
+      comments: 76,
+      trending: true,
       verified: true,
       sentiment: 'alert',
       priority: 'medium',
       image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
     },
     {
-      id: 8,
-      platform: 'Youtube',
-      username: 'DD News Coastal Division',
-      handle: 'ddnewscoastal',
-      content: 'VIDEO: Indian Navy rescues 27 crew members from sinking cargo ship off Kochi coast during severe weather conditions.',
-      time: '2 days ago',
-      location: 'Kochi, Kerala',
-      likes: 1243,
-      shares: 432,
-      comments: 187,
-      trending: true,
-      verified: true,
-      sentiment: 'info',
-      priority: 'low',
-      image: 'https://images.unsplash.com/photo-1506953823976-52e1fdc0149a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
-    },
-    {
       id: 9,
-      platform: 'Reddit',
-      username: 'u/CoastalWatch_India',
-      handle: 'coastalwatch',
-      content: 'Multiple reports of unusual marine activity near Visakhapatnam coast. Local authorities investigating. Anyone else noticing this?',
+      platform: 'Youtube',
+      username: 'India Today',
+      handle: 'indiatoday',
+      content: 'BREAKING: Massive 8.4 magnitude earthquake strikes off Indonesia coast, triggering tsunami warnings across Indian Ocean region.',
       time: '3 hours ago',
-      location: 'Visakhapatnam, Andhra Pradesh',
-      likes: 87,
-      shares: 23,
-      comments: 42,
-      trending: true,
-      verified: false,
-      sentiment: 'alert',
-      priority: 'medium',
-      image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
-    },
-    {
-      id: 10,
-      platform: 'Telegram',
-      username: 'Indian Maritime Alert',
-      handle: 'maritimealert',
-      content: 'URGENT: Oil spill reported 15km off Mumbai coast. Cleanup operations initiated. Avoid area if possible. Updates to follow.',
-      time: '1 hour ago',
-      location: 'Mumbai, Maharashtra',
-      likes: 156,
-      shares: 89,
-      comments: 34,
+      location: 'Indian Ocean',
+      likes: 2431,
+      shares: 1543,
+      comments: 876,
       trending: true,
       verified: true,
       sentiment: 'critical',
       priority: 'high',
-      image: 'https://images.unsplash.com/photo-1615783080245-5d87bb8af5d2?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+      image: 'https://images.unsplash.com/photo-1501426026826-31c667bdf23d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+    },
+    {
+      id: 10,
+      platform: 'Telegram',
+      username: 'Indian Disaster Management',
+      handle: 'disastermgmt',
+      content: 'Tsunami evacuation routes activated for all coastal areas. Follow instructions from local authorities. Do not return until all clear given.',
+      time: '3 hours ago',
+      location: 'All Coastal States',
+      likes: 765,
+      shares: 432,
+      comments: 198,
+      trending: true,
+      verified: true,
+      sentiment: 'critical',
+      priority: 'high',
+      image: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
     }
   ];
 
   // Platform options for filter
-  const platforms = ['All', 'Twitter', 'Facebook', 'Instagram', 'Youtube', 'Reddit', 'Telegram'];
+  const platforms = ['All', 'Twitter', 'Youtube', 'Reddit', 'Telegram'];
   const timeOptions = ['All', 'Last hour', 'Today', 'This week', 'This month'];
   const sentimentOptions = ['All', 'Critical', 'Warning', 'Alert', 'Info'];
   const priorityOptions = ['All', 'High', 'Medium', 'Low'];
+
+  // Count posts by platform
+  const countByPlatform = {
+    'Twitter': socialPosts.filter(post => post.platform === 'Twitter').length,
+    'Youtube': socialPosts.filter(post => post.platform === 'Youtube').length,
+    'Reddit': socialPosts.filter(post => post.platform === 'Reddit').length,
+    'Telegram': socialPosts.filter(post => post.platform === 'Telegram').length,
+    'Total': socialPosts.length,
+    'Urgent': socialPosts.filter(post => post.priority === 'high').length
+  };
 
   // Filter posts based on selected filters and search term
   const filteredPosts = socialPosts.filter(post => {
@@ -240,8 +248,6 @@ const SocialMedia = () => {
   const getPlatformIcon = (platform) => {
     switch(platform) {
       case 'Twitter': return <Twitter size={18} className="text-blue-400" />;
-      case 'Facebook': return <Facebook size={18} className="text-blue-600" />;
-      case 'Instagram': return <Instagram size={18} className="text-pink-500" />;
       case 'Youtube': return <Youtube size={18} className="text-red-500" />;
       case 'Reddit': return <MessageSquare size={18} className="text-orange-500" />;
       case 'Telegram': return <Radio size={18} className="text-blue-500" />;
@@ -288,7 +294,7 @@ const SocialMedia = () => {
               Indian Coastal Threat Monitoring
             </h1>
             <p className="text-gray-600">
-              Real-time monitoring of coastal threats from social media platforms across India
+              Real-time monitoring of tsunami threats from social media platforms across India
             </p>
           </div>
           <div className="flex items-center space-x-4">
@@ -310,26 +316,48 @@ const SocialMedia = () => {
               <Twitter className="text-blue-600" size={24} />
             </div>
             <div>
-              <div className="text-2xl font-bold text-gray-800">1,243</div>
+              <div className="text-2xl font-bold text-gray-800">{countByPlatform.Twitter}</div>
               <div className="text-sm text-gray-600">Twitter Mentions</div>
             </div>
           </div>
-          <div className="bg-white rounded-xl shadow-sm p-6 flex items-center border-l-4 border-green-500">
-            <div className="p-3 bg-green-100 rounded-lg mr-4">
-              <Facebook className="text-green-600" size={24} />
+          <div className="bg-white rounded-xl shadow-sm p-6 flex items-center border-l-4 border-red-500">
+            <div className="p-3 bg-red-100 rounded-lg mr-4">
+              <Youtube className="text-red-600" size={24} />
             </div>
             <div>
-              <div className="text-2xl font-bold text-gray-800">876</div>
-              <div className="text-sm text-gray-600">Facebook Posts</div>
+              <div className="text-2xl font-bold text-gray-800">{countByPlatform.Youtube}</div>
+              <div className="text-sm text-gray-600">YouTube Alerts</div>
             </div>
           </div>
-          <div className="bg-white rounded-xl shadow-sm p-6 flex items-center border-l-4 border-pink-500">
-            <div className="p-3 bg-pink-100 rounded-lg mr-4">
-              <Instagram className="text-pink-600" size={24} />
+          <div className="bg-white rounded-xl shadow-sm p-6 flex items-center border-l-4 border-orange-500">
+            <div className="p-3 bg-orange-100 rounded-lg mr-4">
+              <MessageSquare className="text-orange-600" size={24} />
             </div>
             <div>
-              <div className="text-2xl font-bold text-gray-800">542</div>
-              <div className="text-sm text-gray-600">Instagram Posts</div>
+              <div className="text-2xl font-bold text-gray-800">{countByPlatform.Reddit}</div>
+              <div className="text-sm text-gray-600">Reddit Reports</div>
+            </div>
+          </div>
+          <div className="bg-white rounded-xl shadow-sm p-6 flex items-center border-l-4 border-blue-500">
+            <div className="p-3 bg-blue-100 rounded-lg mr-4">
+              <Radio className="text-blue-600" size={24} />
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-gray-800">{countByPlatform.Telegram}</div>
+              <div className="text-sm text-gray-600">Telegram Channels</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Additional Counts */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <div className="bg-white rounded-xl shadow-sm p-6 flex items-center border-l-4 border-purple-500">
+            <div className="p-3 bg-purple-100 rounded-lg mr-4">
+              <TrendingUp className="text-purple-600" size={24} />
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-gray-800">{countByPlatform.Total}</div>
+              <div className="text-sm text-gray-600">Total Mentions</div>
             </div>
           </div>
           <div className="bg-white rounded-xl shadow-sm p-6 flex items-center border-l-4 border-red-500">
@@ -337,8 +365,26 @@ const SocialMedia = () => {
               <AlertTriangle className="text-red-600" size={24} />
             </div>
             <div>
-              <div className="text-2xl font-bold text-gray-800">87</div>
+              <div className="text-2xl font-bold text-gray-800">{countByPlatform.Urgent}</div>
               <div className="text-sm text-gray-600">Urgent Alerts</div>
+            </div>
+          </div>
+          <div className="bg-white rounded-xl shadow-sm p-6 flex items-center border-l-4 border-yellow-500">
+            <div className="p-3 bg-yellow-100 rounded-lg mr-4">
+              <Clock className="text-yellow-600" size={24} />
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-gray-800">8</div>
+              <div className="text-sm text-gray-600">Coastal States</div>
+            </div>
+          </div>
+          <div className="bg-white rounded-xl shadow-sm p-6 flex items-center border-l-4 border-green-500">
+            <div className="p-3 bg-green-100 rounded-lg mr-4">
+              <Users className="text-green-600" size={24} />
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-gray-800">24</div>
+              <div className="text-sm text-gray-600">Monitoring Centers</div>
             </div>
           </div>
         </div>
@@ -350,7 +396,7 @@ const SocialMedia = () => {
               <Search size={20} className="absolute left-3 top-2.5 text-gray-500" />
               <input
                 type="text"
-                placeholder="Search posts, locations, or users..."
+                placeholder="Search tsunami alerts, locations, or users..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10 pr-4 py-2.5 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50"
@@ -437,7 +483,7 @@ const SocialMedia = () => {
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-bold text-gray-800 flex items-center">
                 <AlertTriangle className="text-red-500 mr-2" size={24} />
-                Urgent Alerts - India Coastal Regions
+                Urgent Tsunami Alerts - Indian Coastal Regions
               </h2>
               <button className="text-blue-600 text-sm flex items-center hover:text-blue-800">
                 View all <ChevronRight size={16} />
@@ -476,8 +522,8 @@ const SocialMedia = () => {
               <Waves size={24} />
             </div>
             <div>
-              <h3 className="font-bold text-lg">Tsunami Watch - Indian Ocean</h3>
-              <p>Monitoring potential tsunami activity after 7.6 magnitude earthquake near Indonesia</p>
+              <h3 className="font-bold text-lg">TSUNAMI WARNING - Indian Ocean</h3>
+              <p>8.4 magnitude earthquake near Indonesia has triggered tsunami warnings for entire eastern Indian coastline</p>
             </div>
           </div>
           <button className="bg-white text-blue-700 px-4 py-2 rounded-lg font-medium hover:bg-blue-50">
@@ -494,27 +540,19 @@ const SocialMedia = () => {
             </button>
             <button className={`px-4 py-2 font-medium flex items-center ${platformFilter === 'Twitter' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
               onClick={() => setPlatformFilter('Twitter')}>
-              <Twitter size={16} className="mr-2" /> Twitter
-            </button>
-            <button className={`px-4 py-2 font-medium flex items-center ${platformFilter === 'Facebook' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
-              onClick={() => setPlatformFilter('Facebook')}>
-              <Facebook size={16} className="mr-2" /> Facebook
-            </button>
-            <button className={`px-4 py-2 font-medium flex items-center ${platformFilter === 'Instagram' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
-              onClick={() => setPlatformFilter('Instagram')}>
-              <Instagram size={16} className="mr-2" /> Instagram
+              <Twitter size={16} className="mr-2" /> Twitter ({countByPlatform.Twitter})
             </button>
             <button className={`px-4 py-2 font-medium flex items-center ${platformFilter === 'Youtube' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
               onClick={() => setPlatformFilter('Youtube')}>
-              <Youtube size={16} className="mr-2" /> YouTube
+              <Youtube size={16} className="mr-2" /> YouTube ({countByPlatform.Youtube})
             </button>
             <button className={`px-4 py-2 font-medium flex items-center ${platformFilter === 'Reddit' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
               onClick={() => setPlatformFilter('Reddit')}>
-              <MessageSquare size={16} className="mr-2" /> Reddit
+              <MessageSquare size={16} className="mr-2" /> Reddit ({countByPlatform.Reddit})
             </button>
             <button className={`px-4 py-2 font-medium flex items-center ${platformFilter === 'Telegram' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
               onClick={() => setPlatformFilter('Telegram')}>
-              <Radio size={16} className="mr-2" /> Telegram
+              <Radio size={16} className="mr-2" /> Telegram ({countByPlatform.Telegram})
             </button>
           </div>
         </div>
@@ -628,11 +666,11 @@ const SocialMedia = () => {
                   <Users className="text-blue-600" size={20} />
                 </div>
                 <div>
-                  <div className="font-bold text-gray-800">5,243</div>
+                  <div className="font-bold text-gray-800">{countByPlatform.Total}</div>
                   <div className="text-sm text-gray-600">Total Mentions</div>
                 </div>
               </div>
-              <div className="text-xs text-green-600 font-medium">+18% from yesterday</div>
+              <div className="text-xs text-green-600 font-medium">+42% in last hour</div>
             </div>
             
             <div className="p-4 border border-gray-200 rounded-lg">
@@ -641,11 +679,11 @@ const SocialMedia = () => {
                   <Navigation className="text-green-600" size={20} />
                 </div>
                 <div>
-                  <div className="font-bold text-gray-800">24</div>
-                  <div className="text-sm text-gray-600">Coastal Locations</div>
+                  <div className="font-bold text-gray-800">8</div>
+                  <div className="text-sm text-gray-600">Coastal States</div>
                 </div>
               </div>
-              <div className="text-xs text-green-600 font-medium">+6 in last hour</div>
+              <div className="text-xs text-green-600 font-medium">All on alert</div>
             </div>
             
             <div className="p-4 border border-gray-200 rounded-lg">
@@ -654,11 +692,11 @@ const SocialMedia = () => {
                   <Bell className="text-red-600" size={20} />
                 </div>
                 <div>
-                  <div className="font-bold text-gray-800">12</div>
-                  <div className="text-sm text-gray-600">New Alerts</div>
+                  <div className="font-bold text-gray-800">{countByPlatform.Urgent}</div>
+                  <div className="text-sm text-gray-600">Urgent Alerts</div>
                 </div>
               </div>
-              <div className="text-xs text-red-600 font-medium">+4 in last hour</div>
+              <div className="text-xs text-red-600 font-medium">+8 in last hour</div>
             </div>
           </div>
         </div>
@@ -666,7 +704,7 @@ const SocialMedia = () => {
         {/* Footer */}
         <div className="text-center text-gray-500 text-sm py-6 border-t border-gray-200">
           <p>Indian Coastal Threat Monitoring System • Updated 5 minutes ago</p>
-          <p className="mt-1">Monitoring 8,458 social media accounts across India's 7,516 km coastline</p>
+          <p className="mt-1">Monitoring social media for tsunami alerts across India's 7,516 km coastline</p>
         </div>
       </div>
     </div>

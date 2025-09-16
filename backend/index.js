@@ -1,11 +1,15 @@
 import express from "express"
 import  router  from "./routes/report.route.js";
+import noticeRouter from "./routes/notice.route.js";
 import { connectDB } from "./libs/mongo.js";
 import cors from  "cors"
+import dotenv from 'dotenv';
+
 
 const app = express();
 
 app.use(express.json());
+dotenv.config();
 
 connectDB()
 app.use(
@@ -16,6 +20,7 @@ app.use(
   );
 
 app.use("/reports", router);  // all routes in router will now start with /reports
+app.use("/notices", noticeRouter); 
 
 app.get("/", (req, res) => {
     res.send("Server is running");

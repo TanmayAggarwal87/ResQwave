@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Notice = () => {
   // State management
@@ -11,6 +11,10 @@ const Notice = () => {
   const [showPublishModal, setShowPublishModal] = useState(false);
   const [confirmationCode, setConfirmationCode] = useState('');
   const [isPublished, setIsPublished] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [currentNoticeId, setCurrentNoticeId] = useState(null);
+
+  const API_BASE = "http://localhost:3000/notices";
 
   // Predefined templates
   const templates = [
@@ -51,6 +55,21 @@ const Notice = () => {
     }
   ];
 
+  // Fetch notices from backend
+  const fetchNotices = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(API_BASE);
+      const data = await response.json();
+      setNotices(data.notices || []);
+    } catch (error) {
+      console.error("Error fetching notices:", error);
+      alert('Failed to fetch notices. Please check your connection.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Handle template selection
   const handleTemplateSelect = (e) => {
     const templateId = parseInt(e.target.value);
@@ -72,60 +91,120 @@ const Notice = () => {
   };
 
   // Open publish confirmation modal
-  const handlePublishClick = () => {
+  const handlePublishClick = async () => {
     if (!title || !content) {
       alert('Please provide both title and content before publishing.');
       return;
     }
-    setShowPublishModal(true);
+
+    try {
+      // First save as draft
+      setLoading(true);
+      const response = await fetch(API_BASE, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title,
+          content,
+          priority,
+          targetAudience,
+          status: 'draft'
+        })
+      });
+      
+      if (response.ok) {
+        const newNotice = await response.json();
+        setCurrentNoticeId(newNotice._id);
+        setShowPublishModal(true);
+      } else {
+        throw new Error('Failed to save notice');
+      }
+    } catch (error) {
+      console.error("Error saving notice:", error);
+      alert('Failed to save notice. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Confirm publication
-  const confirmPublish = () => {
-    if (confirmationCode.toUpperCase() === 'PUBLISH') {
-      const newNotice = {
-        id: Date.now(),
-        title,
-        content,
-        priority,
-        targetAudience,
-        timestamp: new Date().toLocaleString(),
-        status: 'published'
-      };
+  const confirmPublish = async () => {
+    if (confirmationCode.toUpperCase() !== 'PUBLISH') {
+      alert('Incorrect confirmation code. Please type "PUBLISH" to confirm.');
+      return;
+    }
+
+    if (!currentNoticeId) {
+      alert('Notice ID missing. Please try again.');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      // Publish the notice
+      const publishResponse = await fetch(`${API_BASE}/${currentNoticeId}/publish`, {
+        method: 'POST'
+      });
       
-      setNotices([newNotice, ...notices]);
-      resetForm();
-      setShowPublishModal(false);
-      setConfirmationCode('');
-      setIsPublished(true);
-      
-      // Reset published status after 3 seconds
-      setTimeout(() => setIsPublished(false), 3000);
-    } else {
-      alert('Incorrect confirmation code. Please type the correct security code to confirm.');
+      if (publishResponse.ok) {
+        const result = await publishResponse.json();
+        
+        // Update local state
+        setNotices([result.notice, ...notices]);
+        resetForm();
+        setShowPublishModal(false);
+        setConfirmationCode('');
+        setIsPublished(true);
+        setCurrentNoticeId(null);
+        
+        // Reset published status after 3 seconds
+        setTimeout(() => setIsPublished(false), 3000);
+      } else {
+        throw new Error('Failed to publish notice');
+      }
+    } catch (error) {
+      console.error("Error publishing notice:", error);
+      alert('Failed to publish notice. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
   // Save as draft
-  const saveAsDraft = () => {
+  const saveAsDraft = async () => {
     if (!title || !content) {
       alert('Please provide both title and content before saving.');
       return;
     }
     
-    const newNotice = {
-      id: Date.now(),
-      title,
-      content,
-      priority,
-      targetAudience,
-      timestamp: new Date().toLocaleString(),
-      status: 'draft'
-    };
-    
-    setNotices([newNotice, ...notices]);
-    resetForm();
-    alert('Notice saved as draft successfully!');
+    try {
+      setLoading(true);
+      const response = await fetch(API_BASE, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title,
+          content,
+          priority,
+          targetAudience,
+          status: 'draft'
+        })
+      });
+      
+      if (response.ok) {
+        const newNotice = await response.json();
+        setNotices([newNotice, ...notices]);
+        resetForm();
+        alert('Notice saved as draft successfully!');
+      } else {
+        throw new Error('Failed to save draft');
+      }
+    } catch (error) {
+      console.error("Error saving draft:", error);
+      alert('Failed to save draft. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Reset form
@@ -135,14 +214,44 @@ const Notice = () => {
     setSelectedTemplate('');
     setPriority('medium');
     setTargetAudience('all');
+    setCurrentNoticeId(null);
   };
 
   // Delete a notice
-  const deleteNotice = (id) => {
-    if (window.confirm('Are you sure you want to delete this notice?')) {
-      setNotices(notices.filter(notice => notice.id !== id));
+  const deleteNotice = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this notice?')) {
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const response = await fetch(`${API_BASE}/${id}`, {
+        method: 'DELETE'
+      });
+      
+      if (response.ok) {
+        setNotices(notices.filter(notice => notice._id !== id));
+        alert('Notice deleted successfully!');
+      } else {
+        throw new Error('Failed to delete notice');
+      }
+    } catch (error) {
+      console.error("Error deleting notice:", error);
+      alert('Failed to delete notice. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
+
+  // Format date for display
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleString();
+  };
+
+  // Load notices on component mount
+  useEffect(() => {
+    fetchNotices();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 md:p-6">
@@ -172,6 +281,16 @@ const Notice = () => {
             </div>
           )}
           
+          {loading && (
+            <div className="bg-blue-100 border-l-4 border-blue-500 text-blue-800 p-4 rounded-lg mb-6 flex items-center">
+              <svg className="animate-spin h-5 w-5 mr-2 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Processing...
+            </div>
+          )}
+          
           <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 mb-8 border border-gray-200">
             <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -187,6 +306,7 @@ const Notice = () => {
                   value={selectedTemplate} 
                   onChange={handleTemplateSelect}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
+                  disabled={loading}
                 >
                   <option value={0}>Custom Notice</option>
                   {templates.map(template => (
@@ -201,6 +321,7 @@ const Notice = () => {
                   value={priority} 
                   onChange={(e) => setPriority(e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
+                  disabled={loading}
                 >
                   <option value="low" className="text-green-700">Low Priority</option>
                   <option value="medium" className="text-yellow-700">Medium Priority</option>
@@ -217,6 +338,7 @@ const Notice = () => {
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Enter notice title"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 placeholder-gray-600"
+                disabled={loading}
               />
             </div>
             
@@ -228,6 +350,7 @@ const Notice = () => {
                 placeholder="Enter notice content"
                 rows="5"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 placeholder-gray-600"
+                disabled={loading}
               />
             </div>
             
@@ -237,6 +360,7 @@ const Notice = () => {
                 value={targetAudience} 
                 onChange={(e) => setTargetAudience(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
+                disabled={loading}
               >
                 <option value="all">All Users</option>
                 <option value="residents">Residents Only</option>
@@ -248,8 +372,9 @@ const Notice = () => {
             
             <div className="flex flex-wrap gap-4 mt-8">
               <button 
-                className="bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-medium py-3 px-8 rounded-lg transition duration-200 shadow-md flex items-center"
+                className="bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-medium py-3 px-8 rounded-lg transition duration-200 shadow-md flex items-center disabled:opacity-50"
                 onClick={saveAsDraft}
+                disabled={loading || !title || !content}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
@@ -257,8 +382,9 @@ const Notice = () => {
                 Save as Draft
               </button>
               <button 
-                className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium py-3 px-8 rounded-lg transition duration-200 shadow-md flex items-center"
+                className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium py-3 px-8 rounded-lg transition duration-200 shadow-md flex items-center disabled:opacity-50"
                 onClick={handlePublishClick}
+                disabled={loading || !title || !content}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
@@ -270,13 +396,34 @@ const Notice = () => {
         </div>
         
         <div className="bg-white rounded-2xl shadow-xl p-6 border border-gray-100">
-          <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-            Notice History
-          </h2>
-          {notices.length === 0 ? (
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-xl font-semibold text-gray-900 flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              Notice History
+            </h2>
+            <button 
+              onClick={fetchNotices}
+              className="bg-blue-100 hover:bg-blue-200 text-blue-800 font-medium py-2 px-4 rounded-lg flex items-center text-sm"
+              disabled={loading}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              Refresh
+            </button>
+          </div>
+          
+          {loading ? (
+            <div className="text-center py-12">
+              <svg className="animate-spin h-12 w-12 mx-auto text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              <p className="text-gray-700 mt-4">Loading notices...</p>
+            </div>
+          ) : notices.length === 0 ? (
             <div className="text-center py-12 bg-gray-50 rounded-xl border border-dashed border-gray-300">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mx-auto text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -287,7 +434,7 @@ const Notice = () => {
             <div className="space-y-6">
               {notices.map(notice => (
                 <div 
-                  key={notice.id} 
+                  key={notice._id} 
                   className={`border-l-4 p-6 rounded-xl shadow-sm transition-all duration-200 hover:shadow-md ${
                     notice.priority === 'high' 
                       ? 'border-red-500 bg-red-50 hover:bg-red-100' 
@@ -316,7 +463,8 @@ const Notice = () => {
                     </span>
                     <button 
                       className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white text-sm py-1 px-3 rounded-lg transition duration-200 shadow-sm flex items-center"
-                      onClick={() => deleteNotice(notice.id)}
+                      onClick={() => deleteNotice(notice._id)}
+                      disabled={loading}
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -336,9 +484,14 @@ const Notice = () => {
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
-                      Created: {notice.timestamp}
+                      Created: {formatDate(notice.createdAt)}
                     </span>
                   </div>
+                  {notice.publishedAt && (
+                    <div className="mt-2 text-sm text-gray-600">
+                      Published: {formatDate(notice.publishedAt)}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -358,28 +511,34 @@ const Notice = () => {
             
             <h3 className="text-xl font-semibold text-gray-900 mb-2">Security Verification Required</h3>
             <p className="text-gray-700 mb-4">You are about to publish this notice to <span className="font-semibold">{targetAudience}</span> users.</p>
-            <p className="text-gray-700 mb-4">This action cannot be undone. Please enter the security code to confirm publication.</p>
+            <p className="text-gray-700 mb-4">This action cannot be undone. Please enter the security key to confirm publication.</p>
             
             <input
               type="password"
               value={confirmationCode}
               onChange={(e) => setConfirmationCode(e.target.value)}
-              placeholder="Enter security code"
+              placeholder="Enter SECURITY KEY to confirm"
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4 text-gray-900 placeholder-gray-600"
+              disabled={loading}
             />
             
             <div className="flex justify-end gap-3">
               <button 
-                className="bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-5 rounded-lg transition duration-200 shadow-sm"
-                onClick={() => setShowPublishModal(false)}
+                className="bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-5 rounded-lg transition duration-200 shadow-sm disabled:opacity-50"
+                onClick={() => {
+                  setShowPublishModal(false);
+                  setConfirmationCode('');
+                }}
+                disabled={loading}
               >
                 Cancel
               </button>
               <button 
-                className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-medium py-2 px-5 rounded-lg transition duration-200 shadow-sm"
+                className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-medium py-2 px-5 rounded-lg transition duration-200 shadow-sm disabled:opacity-50"
                 onClick={confirmPublish}
+                disabled={loading}
               >
-                Confirm & Publish
+                {loading ? 'Publishing...' : 'Confirm & Publish'}
               </button>
             </div>
           </div>
