@@ -31,84 +31,84 @@ const CrowdSourced = () => {
   const [expandedReport, setExpandedReport] = useState(null);
   const [showFilters, setShowFilters] = useState(false);
 
-  // Sample reports data
+  // Sample reports data with Indian locations and hazards
   const reports = [
     {
       id: 1,
       type: 'Flood',
-      location: 'Beachside Community',
-      description: 'Water levels rising rapidly in the beachside area. Several roads are already impassable. Residents are advised to evacuate immediately and move to higher ground. Emergency services have been notified.',
+      location: 'Chennai, Tamil Nadu',
+      description: 'Heavy monsoon rains have caused flooding in low-lying areas of Chennai. Water levels rising rapidly in the Adyar river basin. Several roads are already impassable. Residents are advised to evacuate immediately and move to higher ground. NDRF teams have been notified.',
       severity: 'High',
       time: '2 hours ago',
       status: 'New',
-      reporter: 'John D.',
-      coordinates: '12.3456, 98.7654',
-      media: ['flood1.jpg', 'flood2.jpg'],
+      reporter: 'Rajesh K.',
+      coordinates: '13.0827, 80.2707',
+      media: ['chennai_flood1.jpg', 'chennai_flood2.jpg'],
       verified: false
     },
     {
       id: 2,
-      type: 'Tsunami Alert',
-      location: 'North Bay Area',
-      description: 'Unusual wave activity detected. Possible tsunami warning. Coastal areas should be evacuated immediately. Waves expected to reach 3-5 meters in height.',
+      type: 'Cyclone Alert',
+      location: 'Puri, Odisha',
+      description: 'Cyclone warning issued for coastal Odisha. Possible landfall expected within 48 hours. Coastal areas should be evacuated immediately. Fishermen advised not to venture into sea.',
       severity: 'Critical',
       time: '5 hours ago',
       status: 'In Progress',
-      reporter: 'Sarah M.',
-      coordinates: '12.5678, 98.9012',
-      media: ['wave1.jpg'],
+      reporter: 'Priya M.',
+      coordinates: '19.8135, 85.8312',
+      media: ['cyclone_alert.jpg'],
       verified: true
     },
     {
       id: 3,
-      type: 'Strong Current',
-      location: 'West Harbor',
-      description: 'Dangerous rip currents observed. Multiple swimmers rescued. Lifeguards have posted warning signs and are monitoring the situation closely.',
+      type: 'Landslide',
+      location: 'Darjeeling, West Bengal',
+      description: 'Landslide reported on NH55 due to heavy rainfall. Multiple vehicles stranded. Border Roads Organisation (BRO) has been alerted for clearance work. Alternate routes suggested via Siliguri.',
       severity: 'Medium',
       time: '1 day ago',
       status: 'Resolved',
-      reporter: 'Coastal Guard',
-      coordinates: '12.1234, 98.5678',
-      media: ['current1.jpg', 'current2.jpg'],
+      reporter: 'Mountain Rescue Team',
+      coordinates: '27.0422, 88.2633',
+      media: ['landslide1.jpg', 'landslide2.jpg'],
       verified: true
     },
     {
       id: 4,
-      type: 'Oil Spill',
-      location: 'South Coast',
-      description: 'Oil slick spotted approximately 2 miles offshore. The spill appears to be spreading. Environmental response team has been dispatched to assess the situation.',
+      type: 'Industrial Accident',
+      location: 'Visakhapatnam, Andhra Pradesh',
+      description: 'Gas leak reported at chemical plant in Gajuwaka area. Residents experiencing breathing difficulties. Emergency response teams dispatched. People advised to move upwind and use wet cloth as mask.',
       severity: 'High',
       time: '2 days ago',
       status: 'New',
-      reporter: 'Fisherman Bob',
-      coordinates: '12.8765, 98.4321',
-      media: ['oil1.jpg'],
+      reporter: 'Local Resident',
+      coordinates: '17.6868, 83.2185',
+      media: ['gas_leak.jpg'],
       verified: false
     },
     {
       id: 5,
-      type: 'Marine Life',
-      location: 'Coral Bay',
-      description: 'Unusual number of jellyfish in swimming areas. Some species may be dangerous. Swimmers are advised to avoid the area until further notice.',
+      type: 'Earthquake',
+      location: 'Uttarkashi, Uttarakhand',
+      description: 'Mild earthquake measuring 4.2 on Richter scale felt in Uttarkashi district. No immediate reports of damage. Authorities monitoring situation.',
       severity: 'Low',
       time: '3 days ago',
       status: 'Resolved',
-      reporter: 'Lifeguard Team',
-      coordinates: '12.1111, 98.2222',
-      media: ['jellyfish1.jpg'],
+      reporter: 'NDMA Alert System',
+      coordinates: '30.7292, 78.4434',
+      media: ['seismic_chart.jpg'],
       verified: true
     },
     {
       id: 6,
-      type: 'Infrastructure',
-      location: 'Pier Area',
-      description: 'Damaged safety railings on the main pier. Structural engineers have been called to assess the damage. Temporary barriers have been installed.',
+      type: 'Fire',
+      location: 'Mumbai, Maharashtra',
+      description: 'Major fire broke out in commercial building in Andheri East. 10 fire tenders at spot. No casualties reported yet. Traffic diverted on Western Express Highway.',
       severity: 'Medium',
       time: '4 days ago',
       status: 'In Progress',
-      reporter: 'Local Business',
-      coordinates: '12.9999, 98.8888',
-      media: ['pier1.jpg', 'pier2.jpg'],
+      reporter: 'Mumbai Fire Brigade',
+      coordinates: '19.1174, 72.8567',
+      media: ['mumbai_fire1.jpg', 'mumbai_fire2.jpg'],
       verified: false
     },
   ];
@@ -178,7 +178,7 @@ const CrowdSourced = () => {
             <div>
               <h1 className="text-3xl font-bold text-gray-800 mb-2">Crowd Sourced Reports</h1>
               <p className="text-gray-600">
-                Hazard reports submitted by ResQWave app users
+                Hazard reports submitted by Indian citizens through the ResQwave app
               </p>
             </div>
             <button className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium shadow-md hover:bg-blue-700 transition-colors">
@@ -192,7 +192,7 @@ const CrowdSourced = () => {
         <div className="mb-8">
           <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
             <BarChart3 className="mr-2 text-blue-600" size={24} />
-            Overview Dashboard
+            India Overview Dashboard
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
@@ -219,11 +219,11 @@ const CrowdSourced = () => {
         <div className="mb-8">
           <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
             <Map className="mr-2 text-orange-600" size={24} />
-            Location Hotspots
+            Indian Regional Hotspots
           </h2>
           
           <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
-            <h3 className="text-lg font-medium text-gray-800 mb-4">Areas with Most Reports</h3>
+            <h3 className="text-lg font-medium text-gray-800 mb-4">States with Most Reports</h3>
             <div className="space-y-4">
               {mostReportedLocations.map(([location, count], index) => (
                 <div key={location} className="flex items-center justify-between">
@@ -280,7 +280,7 @@ const CrowdSourced = () => {
             {showFilters && (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 pt-6 border-t border-gray-200">
                 <div>
-                  <label className="block text-sm font-medium mb-2 text-gray-700">Location</label>
+                  <label className="block text-sm font-medium mb-2 text-gray-700">Indian Location</label>
                   <select
                     value={locationFilter}
                     onChange={(e) => setLocationFilter(e.target.value)}
@@ -326,7 +326,7 @@ const CrowdSourced = () => {
         <div className="mb-8">
           <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
             <TrendingUp className="mr-2 text-green-600" size={24} />
-            Most Recent Hazard Reports
+            Recent Hazard Reports from India
           </h2>
           
           <div className="space-y-5">

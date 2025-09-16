@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 export const connectDB = async () => {
   try {
-    await mongoose.connect("mongodb://localhost:27017/")
+    await mongoose.connect("mongodb://localhost:27017/resqwave")
     console.log("MongoDB connected");
   } catch (err) {
     console.error("MongoDB connection error:", err);
